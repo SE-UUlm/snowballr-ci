@@ -1,0 +1,67 @@
+name: Lint Markdown and Replace GitHub URLs
+description: Lints Markdown files and replaces GitHub URLs
+
+inputs:
+    node-version:
+        description: The Node version that is used to execute scripts
+        required: false
+        default: "24"
+    repository:
+        description: The repository of the URLs to replace
+        required: true
+    source-branch:
+        description: The source branch in the URLs
+        required: true
+    ignore-link-readme:
+        description: A comma-separated string of URL patterns to ignore when linting the README
+        required: false
+        default: ""
+    ignore-link-wiki:
+        description: A comma-separated string of URL patterns to ignore when linting the Wiki
+        required: false
+        default: ""
+
+runs:
+    using: composite
+    steps:
+        - name: Setup Node.js
+          uses: actions/setup-node@v6
+          with:
+              node-version: ${{ inputs.node-version }}
+
+        - name: Install markdownlint-cli
+          shell: bash
+          run: npm install -g markdownlint-cli@0.46.0
+
+        - name: Lint Markdown files
+          shell: bash
+          run: npx markdownlint --config .github/markdownlint.json **/*.md
+
+        - name: Get branch name
+          id: get_branch_name
+          shell: bash
+          run: |
+              BRANCH_NAME=""
+              if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+                  BRANCH_NAME="${{ github.head_ref }}"
+              else
+                  BRANCH_NAME="${{ github.ref_name }}"
+              fi
+              echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+        # To verify whether the wiki links are up-to-date, we replace them with links to the current branch
+        # In case, we change the path of a file we link to in the wiki, this would result in a broken link on this branch
+        # If we wouldn't check this, the broken link would only be noticed on the source branch
+        - name: Replace GitHub URLs to the source branch with the current branch
+          shell: bash
+          run: node ${{ github.action_path }}/replace-github-urls.js ${{ inputs.repository }} ${{ inputs.source-branch }} ${{ steps.get_branch_name.outputs.branch_name }} ${{ github.workspace }}/README.md ${{ github.workspace }}/wiki/
+
+        - name: Check for Broken Links in README
+          uses: becheran/mlc@v1.0.0
+          with:
+              args: --ignore-links "${{ inputs.ignore-link-readme }}" ${{ github.workspace }}/README.md
+
+        - name: Check for Broken Links in Wiki
+          uses: becheran/mlc@v1.0.0
+          with:
+              args: --ignore-links "${{ inputs.ignore-link-wiki }}" ${{ github.workspace }}/wiki/

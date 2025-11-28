@@ -1,0 +1,21 @@
+name: Lint and Publish Wiki
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    linting:
+        name: Lint Markdown
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+
+            - name: Lint Markdown
+              uses: SE-UUlm/snowballr-ci/src/wiki@feat/1-feature-add-initial-workflows
+              with:
+                  repository: SE-UUlm/snowballr-ci
+                  source-branch: main
