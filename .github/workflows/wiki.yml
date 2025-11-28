@@ -7,7 +7,7 @@ on:
     pull_request:
 
 jobs:
-    linting:
+    lint-wiki:
         name: Lint Markdown
         runs-on: ubuntu-latest
         steps:
@@ -15,9 +15,8 @@ jobs:
               uses: actions/checkout@v5
 
             - name: Lint Markdown
-              uses: ./src/wiki
+              uses: ./src/wiki-lint
               with:
                   repository: SE-UUlm/snowballr-ci
                   source-branch: main
-                  ignore-links: "https://github.com/SE-UUlm/snowballr/*"
                   ignore-paths: "src"

@@ -3,7 +3,7 @@ description: Ensures that the Git history is linear
 
 inputs:
     target-branch:
-        description: The target branch to compare
+        description: The branch onto which the current branch should be rebased.
         required: true
 
 runs:

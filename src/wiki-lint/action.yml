@@ -3,23 +3,23 @@ description: Lints Markdown files and replaces GitHub URLs
 
 inputs:
     node-version:
-        description: The Node version that is used to execute scripts
+        description: The Node version that is used to execute scripts.
         required: false
         default: "24"
     repository:
-        description: The repository of the URLs to replace
+        description: The repository containing the wiki.
         required: true
     source-branch:
-        description: The source branch in the URLs
+        description: The source branch in the URLs of the wiki.
         required: true
     # For the following arguments refer to the documentation of MLC
     # https://github.com/marketplace/actions/markup-link-checker-mlc#ci-pipeline
     ignore-links:
-        description: A comma separated list of links which shall be ignored when checking for broken links
+        description: A comma-separated list of links which shall be ignored when checking for broken links.
         required: false
         default: ""
     ignore-paths:
-        description: A comma separated list of directories or files which shall be ignored when checking for broken links
+        description: A comma-separated list of directories or files which shall be ignored when checking for broken links.
         required: false
         default: ""
 

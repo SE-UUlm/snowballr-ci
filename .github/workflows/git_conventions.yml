@@ -17,6 +17,6 @@ jobs:
                   ref: ${{ github.head_ref }}
 
             - name: Run Check
-              uses: ./src/ensure_linear_history
+              uses: ./src/ensure-linear-history
               with:
                   target-branch: main
