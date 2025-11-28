@@ -12,12 +12,14 @@ inputs:
     source-branch:
         description: The source branch in the URLs
         required: true
-    ignore-links-readme:
-        description: A comma-separated string of URL patterns to ignore when linting the README
+    # For the following arguments refer to the documentation of MLC
+    # https://github.com/marketplace/actions/markup-link-checker-mlc#ci-pipeline
+    ignore-links:
+        description: A comma separated list of links which shall be ignored when checking for broken links
         required: false
         default: ""
-    ignore-links-wiki:
-        description: A comma-separated string of URL patterns to ignore when linting the Wiki
+    ignore-paths:
+        description: A comma separated list of directories or files which shall be ignored when checking for broken links
         required: false
         default: ""
 
@@ -56,12 +58,9 @@ runs:
           shell: bash
           run: node ${{ github.action_path }}/replace-github-urls.js ${{ inputs.repository }} ${{ inputs.source-branch }} ${{ steps.get_branch_name.outputs.branch_name }} ${{ github.workspace }}/README.md ${{ github.workspace }}/wiki/
 
-        - name: Check for Broken Links in README
+        - name: Check for Broken Links in Markdown files
           uses: becheran/mlc@v1.0.0
           with:
-              args: --ignore-links "${{ inputs.ignore-links-readme }}" ${{ github.workspace }}/README.md
-
-        - name: Check for Broken Links in Wiki
-          uses: becheran/mlc@v1.0.0
-          with:
-              args: --ignore-links "${{ inputs.ignore-links-wiki }}" ${{ github.workspace }}/wiki/
+              args: |
+                  ${{ inputs.ignore-links != '' && format('--ignore-links "{0}"', inputs.ignore-links) || '' }}
+                  ${{ inputs.ignore-paths != '' && format('--ignore-path "{0}"', inputs.ignore-paths) || '' }}

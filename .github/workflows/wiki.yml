@@ -19,3 +19,5 @@ jobs:
               with:
                   repository: SE-UUlm/snowballr-ci
                   source-branch: main
+                  ignore-links: "https://github.com/SE-UUlm/snowballr/*"
+                  ignore-paths: "src"

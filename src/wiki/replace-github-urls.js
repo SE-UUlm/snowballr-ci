@@ -101,7 +101,7 @@ async function processFile(filePath) {
         // If content was updated, write it back to file
         if (content !== updatedContent) {
             await fs.writeFile(filePath, updatedContent, "utf-8");
-            console.log(`Updated: ${path.relative(rootDir, filePath)}`);
+            console.log(`Updated: ${filePath}`);
             return true;
         }
 
