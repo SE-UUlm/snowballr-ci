@@ -20,3 +20,17 @@ jobs:
                   repository: SE-UUlm/snowballr-ci
                   source-branch: main
                   ignore-paths: "src"
+
+    publish-wiki:
+        name: Publish Wiki
+        # if: ${{ github.ref_name == 'main' && github.ref_type == 'branch' }}
+        runs-on: ubuntu-latest
+        needs: lint-wiki
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+
+            - name: Publish Wiki
+              uses: ./src/wiki-publish
