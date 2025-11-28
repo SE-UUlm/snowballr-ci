@@ -14,9 +14,9 @@ _Currently there are no reusable workflows defined._
 
 The following actions are available in this repository:
 
-- [ensure-linear-history](#ensure-linear-git-history): Ensures that the git history of a branch is linear.
-- [wiki-lint](#wiki-lint): Lints the wiki markdown files for style and formatting issues.
-- [wiki-publish](#wiki-publish): Publishes the wiki directory to the GitHub Wiki.
+- [Ensure Linear Git History](#ensure-linear-git-history): Ensures that the git history of a branch is linear.
+- [Markdown Lint](#markdown-lint): Lints Markdown files for style and formatting issues.
+- [Wiki Publish](#wiki-publish): Publishes the wiki directory to the GitHub Wiki.
 
 ### Ensure Linear Git History
 
@@ -48,7 +48,7 @@ Arguments:
 | --------------- | ----------------------------------------------------------- | :------: | :-----: |
 | `target-branch` | The branch onto which the current branch should be rebased. |   Yes    |    -    |
 
-### Wiki Lint
+### Markdown Lint
 
 This action lints the markdown files in the wiki and other Markdown files, e.g., the README for style and formatting
 issues. It helps maintain a consistent and professional appearance for the documentation.
@@ -56,7 +56,7 @@ issues. It helps maintain a consistent and professional appearance for the docum
 Usage:
 
 ```yaml
-lint-wiki:
+lint-md:
     name: Linting Markdown
     runs-on: ubuntu-latest
     steps:
@@ -64,7 +64,7 @@ lint-wiki:
           uses: actions/checkout@v5
 
         - name: Lint Markdown
-          uses: SE-UUlm/snowballr-ci/src/wiki-lint@main
+          uses: SE-UUlm/snowballr-ci/src/md-lint@main
           with:
               source-branch: develop
               ignore-links: "https://dl.acm.org/doi/*"
@@ -91,7 +91,7 @@ For `ignore-links` and `ignore-paths`, refer to the
 
 This action publishes the wiki directory to the GitHub Wiki. It automates the process of pushing updates to the wiki,
 ensuring that the documentation is always up-to-date. It is recommended to use this action in combination with the
-[wiki-lint](#wiki-lint) action to ensure that the wiki content is properly formatted before publishing.
+[Markdown Lint](#markdown-lint) action to ensure that the wiki content is properly formatted before publishing.
 
 Usage:
 
@@ -100,7 +100,7 @@ publish-wiki:
     name: Publish Wiki
     if: ${{ github.ref_name == 'main' && github.ref_type == 'branch' }} # Only publish from main branch
     runs-on: ubuntu-latest
-    needs: lint-wiki
+    needs: lint-md
     permissions:
         contents: write # Required to push to the wiki repository
     steps:

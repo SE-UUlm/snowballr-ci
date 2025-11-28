@@ -1,5 +1,5 @@
-name: Lint Markdown and Replace GitHub URLs
-description: Lints Markdown files and replaces GitHub URLs
+name: Lint Markdown Files
+description: Lints Markdown files (README, CHANGELOG, the wiki, ...)
 
 inputs:
     node-version:
@@ -7,7 +7,7 @@ inputs:
         required: false
         default: "24"
     source-branch:
-        description: The source branch in the URLs of the wiki.
+        description: The source branch in the URLs in the Markdown files.
         required: true
     # For the following arguments refer to the documentation of MLC
     # https://github.com/marketplace/actions/markup-link-checker-mlc#ci-pipeline
@@ -48,8 +48,8 @@ runs:
               fi
               echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
-        # To verify whether the wiki links are up-to-date, we replace them with links to the current branch
-        # In case, we change the path of a file we link to in the wiki, this would result in a broken link on this branch
+        # To verify whether the links are up-to-date, we replace them with links to the current branch
+        # In case, we change the path of a file we link to in a Markdown file, this would result in a broken link on this branch
         # If we wouldn't check this, the broken link would only be noticed on the source branch
         - name: Replace GitHub URLs to the source branch with the current branch
           shell: bash
