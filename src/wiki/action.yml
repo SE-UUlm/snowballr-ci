@@ -12,11 +12,11 @@ inputs:
     source-branch:
         description: The source branch in the URLs
         required: true
-    ignore-link-readme:
+    ignore-links-readme:
         description: A comma-separated string of URL patterns to ignore when linting the README
         required: false
         default: ""
-    ignore-link-wiki:
+    ignore-links-wiki:
         description: A comma-separated string of URL patterns to ignore when linting the Wiki
         required: false
         default: ""
@@ -59,9 +59,9 @@ runs:
         - name: Check for Broken Links in README
           uses: becheran/mlc@v1.0.0
           with:
-              args: --ignore-links "${{ inputs.ignore-link-readme }}" ${{ github.workspace }}/README.md
+              args: --ignore-links "${{ inputs.ignore-links-readme }}" ${{ github.workspace }}/README.md
 
         - name: Check for Broken Links in Wiki
           uses: becheran/mlc@v1.0.0
           with:
-              args: --ignore-links "${{ inputs.ignore-link-wiki }}" ${{ github.workspace }}/wiki/
+              args: --ignore-links "${{ inputs.ignore-links-wiki }}" ${{ github.workspace }}/wiki/

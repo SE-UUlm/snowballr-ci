@@ -17,6 +17,6 @@ jobs:
                   ref: ${{ github.head_ref }}
 
             - name: Run Check
-              uses: SE-UUlm/snowballr-ci/src/git_conventions/ensure_linear_history@feat/1-feature-add-initial-workflows
+              uses: ./src/ensure_linear_history
               with:
                   target-branch: main
