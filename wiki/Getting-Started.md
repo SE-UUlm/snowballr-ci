@@ -66,7 +66,6 @@ lint-wiki:
         - name: Lint Markdown
           uses: SE-UUlm/snowballr-ci/src/wiki-lint@main
           with:
-              repository: org/repo-name
               source-branch: develop
               ignore-links: "https://dl.acm.org/doi/*"
               ignore-paths: "src"
@@ -81,7 +80,6 @@ Arguments:
 | Argument        | Description                                                                                           | Required |     Default      |
 | --------------- | ----------------------------------------------------------------------------------------------------- | :------: | :--------------: |
 | `node-version`  | The Node version that is used to execute scripts.                                                     |    No    |        24        |
-| `repository`    | The repository containing the wiki.                                                                   |   Yes    |        -         |
 | `source-branch` | The source branch in the URLs of the wiki.                                                            |   Yes    |        -         |
 | `ignore-links`  | A comma-separated list of links which shall be ignored when checking for broken links.                |    No    | `<empty-string>` |
 | `ignore-paths`  | A comma-separated list of directories or files which shall be ignored when checking for broken links. |    No    | `<empty-string>` |

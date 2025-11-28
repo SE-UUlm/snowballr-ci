@@ -17,7 +17,6 @@ jobs:
             - name: Lint Markdown
               uses: ./src/wiki-lint
               with:
-                  repository: SE-UUlm/snowballr-ci
                   source-branch: main
                   ignore-paths: "src"
 
