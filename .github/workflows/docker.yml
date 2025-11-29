@@ -1,0 +1,77 @@
+name: Build and Publish Docker Image
+
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{github.repository}}
+
+on:
+    workflow_call:
+        inputs:
+            should-publish:
+                required: true
+                type: boolean
+                description: Whether the image should be pushed to the registry.
+
+jobs:
+    build-and-publish-docker-image:
+        name: Build and Publish Docker Image
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+              with:
+                  submodules: "recursive"
+
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v3
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            # This step uses metadata-action to extract tags and labels that will be
+            # applied to the specified image. The `id` "meta" allows the output of
+            # this step to be referenced in a subsequent step. The `images` value
+            # provides the base name for the tags and labels.
+            # We add the following tags
+            # - version tags: for v1.2.3 -> v1, v1.2, v1.2.3
+            # - latest tags: for develop -> latest-dev; for latest tag -> latest
+            - name: Extract metadata (tags, labels) for Docker
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  tags: |
+                      type=semver,pattern={{version}},enable=${{ github.ref_type == 'tag' }}
+                      type=semver,pattern={{major}}.{{minor}},enable=${{ github.ref_type == 'tag' }}
+                      type=semver,pattern={{major}},enable=${{ github.ref_type == 'tag' }}
+                      type=raw,value=latest-dev,enable=${{ github.ref_name == 'develop' }}
+                      type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
+                  flavor: |
+                      latest=false
+
+            - name: Login to GitHub Container Registry
+              if: ${{ inputs.should-publish == 'true' }}
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Build and push Docker Image
+              id: push
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  push: ${{ inputs.should-publish == 'true' }}
+                  # Only build for ARM when we intend to publish the image, as the emulation takes a lot of time
+                  platforms: linux/amd64 ${{ inputs.should-publish == 'true' && ', linux/arm64' || '' }}
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+
+            - name: Generate artifact attestation
+              if: ${{ inputs.should-publish == 'true' }}
+              uses: actions/attest-build-provenance@v3
+              with:
+                  subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+                  subject-digest: ${{ steps.push.outputs.digest }}
+                  push-to-registry: true

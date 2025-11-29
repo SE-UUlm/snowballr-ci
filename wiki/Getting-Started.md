@@ -8,7 +8,43 @@ in your own repositories.
 
 The following workflows are available in this repository:
 
-_Currently there are no reusable workflows defined._
+- [Docker Build and Publish](#docker-build-and-publish): Builds and publishes a Docker Image to the GitHub Container Registry.
+
+### Docker Build and Publish
+
+This reusable workflow builds and publishes a Docker Image to the GitHub Container Registry.
+
+Usage:
+
+```yaml
+name: Docker
+
+on:
+    push:
+        branches: ["develop"]
+        tags: ["v*.*.*"]
+    pull_request:
+
+jobs:
+    build-and-publish-docker-image:
+        name: Build and Publish Docker Image
+        uses: SE-UUlm/snowballr-ci/.github/workflows/docker.yml@main
+        permissions:
+            contents: read
+            packages: write
+            attestations: write
+            id-token: write
+        with:
+            should-publish: ${{ github.ref_type == 'tag' || (github.ref_type == 'branch' && github.ref_name == 'develop') }}
+```
+
+This workflow expects a `Dockerfile` in the root of the repository.
+
+Arguments:
+
+| Argument         | Description                                                                          | Required | Default |
+| ---------------- | ------------------------------------------------------------------------------------ | :------: | :-----: |
+| `should-publish` | Whether the built Docker Image should be published to the GitHub Container Registry. |   Yes    |    -    |
 
 ## Actions
 
