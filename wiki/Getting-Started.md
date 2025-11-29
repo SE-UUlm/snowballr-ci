@@ -8,7 +8,8 @@ in your own repositories.
 
 The following workflows are available in this repository:
 
-- [Docker Build and Publish](#docker-build-and-publish): Builds and publishes a Docker Image to the GitHub Container Registry.
+- [Docker Build and Publish](#docker-build-and-publish): Builds and publishes a Docker Image to the GitHub Container
+  Registry.
 
 ### Docker Build and Publish
 
@@ -53,6 +54,7 @@ The following actions are available in this repository:
 - [Ensure Linear Git History](#ensure-linear-git-history): Ensures that the git history of a branch is linear.
 - [Markdown Lint](#markdown-lint): Lints Markdown files for style and formatting issues.
 - [Wiki Publish](#wiki-publish): Publishes the wiki directory to the GitHub Wiki.
+- [Teamscale Upload](#teamscale-upload): Uploads code coverage reports to Teamscale.
 
 ### Ensure Linear Git History
 
@@ -153,3 +155,54 @@ the GitHub Wiki.
 Arguments:
 
 _None at the moment._
+
+### Teamscale Upload
+
+This action uploads code coverage reports to Teamscale, a code quality and coverage analysis tool. It helps in
+monitoring and improving the code quality by providing insights into code coverage metrics.
+
+The action is designed to have sensible defaults for SnowballR projects, but it can be customized using the provided
+arguments.
+
+Usage:
+
+```yaml
+teamscale-upload:
+    name: Teamscale Upload
+    runs-on: ubuntu-latest
+    needs: coverage-report
+    steps:
+        - name: Checkout code
+            uses: actions/checkout@v5
+
+        - name: Download coverage report
+            uses: actions/download-artifact@v6
+            with:
+                name: coverage-report
+                path: .
+
+        - name: Teamscale Upload
+            uses: SE-UUlm/snowballr-ci/src/teamscale-upload@main
+            with:
+                project: <project-id>
+                access-key: ${{ secrets.TEAMSCALE_ACCESS_KEY }}
+                format: <format>
+                files: coverage-report.xml
+```
+
+In the example above, we assume that there is a previous job named `coverage-report` that generates the coverage report
+and uploads it as an artifact named `coverage-report`.
+
+Arguments:
+
+| Argument     | Description                                                                                     | Required |                    Default                     |
+| ------------ | ----------------------------------------------------------------------------------------------- | :------: | :--------------------------------------------: |
+| `server`     | The URL of the Teamscale server.                                                                |    No    | <https://exia.informatik.uni-ulm.de/teamscale> |
+| `project`    | The Teamscale project ID where the coverage report should be uploaded.                          |   Yes    |                       -                        |
+| `user`       | The Teamscale username for authentication.                                                      |    No    |                slartibartfass2                 |
+| `access-key` | The Teamscale access key for authentication. It is recommended to store this in GitHub Secrets. |   Yes    |                       -                        |
+| `format`     | The format of the coverage report                                                               |   Yes    |                       -                        |
+| `files`      | The path(s) or pattern(s) of the coverage report files.                                         |   Yes    |                       -                        |
+
+All arguments are passed to the [Teamscale Upload Action](https://github.com/cqse/teamscale-upload-action), refer to
+[its documentation](https://github.com/cqse/teamscale-upload-action/blob/master/action.yml) for more details.

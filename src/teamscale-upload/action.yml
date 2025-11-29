@@ -1,0 +1,49 @@
+name: Teamscale Upload
+description: Uploads a coverage report to Teamscale
+
+inputs:
+    server:
+        description: Teamscale Server URL
+        required: false
+        default: "https://exia.informatik.uni-ulm.de/teamscale"
+    project:
+        description: ID of the Teamscale project
+        required: true
+    user:
+        description: User used for the upload
+        required: false
+        default: "slartibartfass2"
+    access-key:
+        description: Access Key used for the upload
+        required: true
+    format:
+        description: Coverage format
+        required: true
+    files:
+        description: Files used for the coverage upload
+        required: true
+
+runs:
+    using: composite
+    steps:
+        # We have to trigger this when triggered on "pull_request" because Teamscale requires a revision.
+        # Therefore, we retrieve the last commit and set the revision manually.
+        - name: Retrieve last commit of PR
+          if: ${{ github.event_name == 'pull_request' }}
+          shell: bash
+          run: bash ${{ github.action_path }}/retrieve_last_commit.sh -n ${{ github.event.pull_request.number }}
+
+        - name: Teamscale Upload
+          if: github.actor != 'dependabot[bot]' # We skip the upload when triggered by a Dependabot update
+          uses: cqse/teamscale-upload-action@v2.9.6
+          with:
+              server: ${{ inputs.server }}
+              project: ${{ inputs.project }}
+              user: ${{ inputs.user }}
+              accesskey: ${{ inputs.access-key }}
+              partition: "Github Action > ${{ github.ref_name }} ${{ github.run_id }}"
+              format: ${{ inputs.format }}
+              message: "Code coverage from GitHub Actions"
+              files: ${{ inputs.files }}
+              # When the event is a PR, use the previously defined env variable; otherwise the `github.sha` is fine.
+              revision: ${{ github.event_name == 'pull_request' && env.LATEST_COMMIT_SHA || github.sha }}
