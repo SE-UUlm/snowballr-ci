@@ -88,8 +88,8 @@ Arguments:
 
 ### Markdown Lint
 
-This action lints the markdown files in the wiki and other Markdown files, e.g., the README for style and formatting
-issues. It helps maintain a consistent and professional appearance for the documentation.
+This action lints the Markdown files in the wiki and other files, e.g., the README.md and CHANGELOG.md for style and
+formatting issues. It helps maintain a consistent and professional appearance for the documentation.
 
 Usage:
 
@@ -102,16 +102,15 @@ lint-md:
           uses: actions/checkout@v5
 
         - name: Lint Markdown
-          uses: SE-UUlm/snowballr-ci/src/md-lint@main
+          uses: SE-UUlm/snowballr-ci/src/lint-md@main
           with:
               source-branch: develop
               ignore-links: "https://dl.acm.org/doi/*"
               ignore-paths: "src"
 ```
 
-This actions expects a `REAMDME.md` file and a `wiki` directory in the root of the repository. Also, it requires a
-`markdownlint.json` file in the `.github` directory to define the linting rules. For more information, refer to the
-[Markdownlint documentation](https://github.com/DavidAnson/markdownlint#optionsconfig).
+This actions requires a `markdownlint.json` file in the `.github` directory to define the linting rules. For more
+information, refer to the [Markdownlint documentation](https://github.com/DavidAnson/markdownlint#optionsconfig).
 
 Arguments:
 

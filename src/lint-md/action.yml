@@ -34,7 +34,16 @@ runs:
 
         - name: Lint Markdown files
           shell: bash
-          run: npx markdownlint --config .github/markdownlint.json **/*.md
+          run: npx markdownlint --config .github/markdownlint.json --ignore CHANGELOG.md **/*.md
+
+        # We use hallmark for linting the CHANGELOG because the its format doesn't adhere to normal Markdown style rules
+        - name: Lint CHANGELOG.md
+          shell: bash
+          run: |
+              if [ -f "CHANGELOG.md" ]; then
+                  npm install -g hallmark@5.0.2
+                  hallmark lint CHANGELOG.md
+              fi
 
         - name: Get branch name
           id: get_branch_name
