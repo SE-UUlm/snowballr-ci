@@ -10,6 +10,7 @@ The following workflows are available in this repository:
 
 - [Docker Build and Publish](#docker-build-and-publish): Builds and publishes a Docker Image to the GitHub Container
   Registry.
+- [Release](#release): Creates a new release on GitHub and optionally merges the current branch into a target branch.
 
 ### Docker Build and Publish
 
@@ -46,6 +47,47 @@ Arguments:
 | Argument         | Description                                                                           | Required | Default |
 | ---------------- | ------------------------------------------------------------------------------------- | :------: | :-----: |
 | `default-branch` | The default development branch on which the latest image is tagged with `latest-dev`. |   Yes    |    -    |
+
+### Release
+
+This reusable workflow creates a new release on GitHub and optionally merges the current branch into a target branch.
+
+Usage:
+
+```yaml
+name: Release
+
+on:
+    push:
+        tags: ["v*.*.*"]
+
+jobs:
+    release:
+        name: Release Current Version
+        uses: SE-UUlm/snowballr-ci/.github/workflows/release.yml@main
+        needs: build
+        permissions:
+            contents: write
+        with:
+            artifact-name: release-artifact
+            asset-path: release-artifact.zip
+            target-branch: main
+```
+
+This reusable workflow expects a `CHANGELOG.md` in the root of the repository, which is used to create the release. Also,
+the workflow has to be triggered on a tag push, because the tag is used to check, which version is released.
+
+Arguments:
+
+| Argument        | Description                                                                           | Required |     Default      |
+| --------------- | ------------------------------------------------------------------------------------- | :------: | :--------------: |
+| `artifact-name` | The name of the artifact containing the release files.                                |    No    | `<empty-string>` |
+| `asset-path`    | The path to the release assets.                                                       |    No    | `<empty-string>` |
+| `target-branch` | The branch into which the current branch should be merged after creating the release. |    No    | `<empty-string>` |
+
+If `artifact-name` and `asset-path` are provided, the specified artifact is downloaded and attached to the release. If
+`target-branch` is provided, the current branch is merged into the specified target branch after creating the release.
+Otherwise, no merge is performed.
 
 ## Actions
 
