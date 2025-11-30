@@ -36,16 +36,16 @@ jobs:
             attestations: write
             id-token: write
         with:
-            should-publish: ${{ github.ref_type == 'tag' || (github.ref_type == 'branch' && github.ref_name == 'develop') }}
+            default-branch: develop
 ```
 
 This workflow expects a `Dockerfile` in the root of the repository.
 
 Arguments:
 
-| Argument         | Description                                                                          | Required | Default |
-| ---------------- | ------------------------------------------------------------------------------------ | :------: | :-----: |
-| `should-publish` | Whether the built Docker Image should be published to the GitHub Container Registry. |   Yes    |    -    |
+| Argument         | Description                                                                           | Required | Default |
+| ---------------- | ------------------------------------------------------------------------------------- | :------: | :-----: |
+| `default-branch` | The default development branch on which the latest image is tagged with `latest-dev`. |   Yes    |    -    |
 
 ## Actions
 
