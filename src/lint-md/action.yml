@@ -67,6 +67,7 @@ runs:
         - name: Check for Broken Links in Markdown files
           uses: becheran/mlc@v1.0.0
           with:
+              # We automatically ignore links to releases because the CHANGELOG.md might contain releases that are not created yet.
               args: |
-                  ${{ inputs.ignore-links != '' && format('--ignore-links "{0}"', inputs.ignore-links) || '' }}
+                  --ignore-links "https://github.com/${{ github.repository }}/releases/tag/*${{ inputs.ignore-links != '' && format(',{0}', inputs.ignore-links) || '' }}"
                   ${{ inputs.ignore-paths != '' && format('--ignore-path "{0}"', inputs.ignore-paths) || '' }}
