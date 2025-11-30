@@ -69,8 +69,15 @@ jobs:
         permissions:
             contents: write
         with:
+            artifact-name: release-artifact-jar
+            asset-path: release-artifact-*.jar
+            target-branch: main
+
+# Alternatively, if artifact contains multiple files:
+        with:
             artifact-name: release-artifact
             asset-path: release-artifact.zip
+            zip-assets: true
             target-branch: main
 ```
 
@@ -79,14 +86,17 @@ the workflow has to be triggered on a tag push, because the tag is used to check
 
 Arguments:
 
-| Argument        | Description                                                                           | Required |     Default      |
-| --------------- | ------------------------------------------------------------------------------------- | :------: | :--------------: |
-| `artifact-name` | The name of the artifact containing the release files.                                |    No    | `<empty-string>` |
-| `asset-path`    | The path to the release assets.                                                       |    No    | `<empty-string>` |
-| `target-branch` | The branch into which the current branch should be merged after creating the release. |    No    | `<empty-string>` |
+| Argument        | Description                                                                             | Required |     Default      |
+| --------------- | --------------------------------------------------------------------------------------- | :------: | :--------------: |
+| `artifact-name` | The name of the artifact containing the release files.                                  |    No    | `<empty-string>` |
+| `asset-path`    | The path to the release assets.                                                         |    No    | `<empty-string>` |
+| `zip-assets`    | Whether the assets of the artifacts should be zipped before adding them to the release. |    No    |      false       |
+| `target-branch` | The branch into which the current branch should be merged after creating the release.   |    No    | `<empty-string>` |
 
-If `artifact-name` and `asset-path` are provided, the specified artifact is downloaded and attached to the release. If
-`target-branch` is provided, the current branch is merged into the specified target branch after creating the release.
+If `artifact-name` and `asset-path` are provided, the specified artifact is downloaded and its assets attached to the
+release. If `zip-assets` is set to `true`, the assets are zipped into a single file before attaching them to the
+release. In this case, the `asset-path` refers to the name of the zip file. If `target-branch` is provided, the current
+branch is merged into the specified target branch after creating the release.
 Otherwise, no merge is performed.
 
 ## Actions

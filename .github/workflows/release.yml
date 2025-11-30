@@ -13,6 +13,11 @@ on:
                 required: false
                 type: string
                 default: ""
+            zip-assets:
+                description: Whether the assets of the artifacts should be zipped before adding them to the release (useful for multiple files).
+                required: false
+                type: boolean
+                default: false
             target-branch:
                 description: Branch that is updated after release was created.
                 required: false
@@ -36,13 +41,25 @@ jobs:
               uses: actions/download-artifact@v6
               with:
                   name: ${{ inputs.artifact-name }}
+                  path: assets/
+
+            - name: Zip assets
+              if: ${{ inputs.zip-assets && inputs.asset-path != '' }}
+              uses: montudor/action-zip@v1
+              with:
+                  args: zip -qq -r ${{ inputs.asset-path }} assets
+
+            # To have the asset at the same location as when not zipped, we move the zipped assets
+            - name: Move zipped assets into assets
+              if: ${{ inputs.zip-assets && inputs.asset-path != '' }}
+              run: mv ${{ inputs.asset-path }} assets/${{ inputs.asset-path }}
 
             - name: Create Release
-              uses: docker://antonyurchenko/git-release:v5
+              uses: docker://antonyurchenko/git-release:v6
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
-                  args: ${{ inputs.asset-path }}
+                  args: ${{ inputs.asset-path != '' && format('assets/{0}', inputs.asset-path) || '' }}
 
     update-branch:
         name: Update target branch
