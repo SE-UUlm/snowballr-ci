@@ -69,7 +69,7 @@ fi
 
 # Fetch commits (fail on HTTP errors)
 if ! response=$(curl -sS -f "${headers[@]}" "$api_url"); then
-  echo "::error ::Failed to fetch commits from ${api_url}" >&2
+  echo "::error::Failed to fetch commits from ${api_url}" >&2
   exit 3
 fi
 
@@ -79,7 +79,7 @@ printf '%s\n' "$response" >"$response_file"
 # Ensure we have at least one commit and extract last commit SHA
 length=$(jq 'length' "$response_file")
 if [ "$length" -eq 0 ]; then
-  echo "::error ::No commits found for PR ${pr_number} in ${repo}" >&2
+  echo "::error::No commits found for PR ${pr_number} in ${repo}" >&2
   exit 4
 fi
 

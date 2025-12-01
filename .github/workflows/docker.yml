@@ -70,7 +70,7 @@ jobs:
                   context: .
                   push: ${{ steps.check-push.outputs.should-push == 'true' }}
                   # Only build for ARM when we intend to publish the image, as the emulation takes a lot of time
-                  platforms: linux/amd64 ${{ steps.check-push.outputs.should-push == 'true' && ', linux/arm64' || '' }}
+                  platforms: ${{ steps.check-push.outputs.should-push == 'true' && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
 
@@ -78,6 +78,6 @@ jobs:
               if: ${{ steps.check-push.outputs.should-push == 'true' }}
               uses: actions/attest-build-provenance@v3
               with:
-                  subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
+                  subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   subject-digest: ${{ steps.push.outputs.digest }}
                   push-to-registry: true

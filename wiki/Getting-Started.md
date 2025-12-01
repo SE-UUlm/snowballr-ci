@@ -110,7 +110,7 @@ The following actions are available in this repository:
 
 ### Ensure Linear Git History
 
-This actions checks whether the git history is linear, meaning that it's rebased onto a target branch (e.g., default)
+This action checks whether the git history is linear, meaning that it's rebased onto a target branch (e.g., default)
 and there are no merge commits in its history. This is important for maintaining a clean and understandable git history.
 
 Usage:
@@ -161,7 +161,7 @@ lint-md:
               ignore-paths: "src"
 ```
 
-This actions requires a `markdownlint.json` file in the `.github` directory to define the linting rules. For more
+A `markdownlint.json` file in the `.github` directory to define the linting rules is required. For more
 information, refer to the [Markdownlint documentation](https://github.com/DavidAnson/markdownlint#optionsconfig).
 
 Arguments:
@@ -252,7 +252,7 @@ Arguments:
 | `project`    | The Teamscale project ID where the coverage report should be uploaded.                          |   Yes    |                       -                        |
 | `user`       | The Teamscale username for authentication.                                                      |    No    |                slartibartfass2                 |
 | `access-key` | The Teamscale access key for authentication. It is recommended to store this in GitHub Secrets. |   Yes    |                       -                        |
-| `format`     | The format of the coverage report                                                               |   Yes    |                       -                        |
+| `format`     | The format of the coverage report.                                                              |   Yes    |                       -                        |
 | `files`      | The path(s) or pattern(s) of the coverage report files.                                         |   Yes    |                       -                        |
 
 All arguments are passed to the [Teamscale Upload Action](https://github.com/cqse/teamscale-upload-action), refer to

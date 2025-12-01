@@ -2,7 +2,7 @@
  * Script to replace GitHub URLs pointing to a source branch with a specified target branch name
  * in all wiki files and the README.md file.
  *
- * Usage: node scripts/wiki-replace-github-urls.js <owner/repo> <source-branch> <target-branch>
+ * Usage: node src/lint-md/replace-github-urls.js <owner/repo> <source-branch> <target-branch>
  */
 
 import fs from "fs/promises";
@@ -15,7 +15,7 @@ if (args.length !== 5) {
         "Error: Please provide a repository (owner/repo), a source branch, a target branch, the README path, and the wiki directory path as arguments"
     );
     console.error(
-        "Usage: node wiki-replace-github-urls.js <owner/repo> <source-branch> <target-branch> <readme-path> <wiki-dir>"
+        "Usage: node replace-github-urls.js <owner/repo> <source-branch> <target-branch> <readme-path> <wiki-dir>"
     );
     process.exit(1);
 }

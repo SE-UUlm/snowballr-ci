@@ -36,7 +36,7 @@ runs:
           shell: bash
           run: npx markdownlint --config .github/markdownlint.json --ignore CHANGELOG.md **/*.md
 
-        # We use hallmark for linting the CHANGELOG because the its format doesn't adhere to normal Markdown style rules
+        # We use hallmark for linting the CHANGELOG because its format doesn't adhere to normal Markdown style rules
         - name: Lint CHANGELOG.md
           shell: bash
           run: |
@@ -58,7 +58,7 @@ runs:
               echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
 
         # To verify whether the links are up-to-date, we replace them with links to the current branch
-        # In case, we change the path of a file we link to in a Markdown file, this would result in a broken link on this branch
+        # In case we change the path of a file we link to in a Markdown file, this would result in a broken link on this branch
         # If we wouldn't check this, the broken link would only be noticed on the source branch
         - name: Replace GitHub URLs to the source branch with the current branch
           shell: bash

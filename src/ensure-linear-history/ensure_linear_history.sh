@@ -56,9 +56,9 @@ if [ $# -ge 1 ]; then
 fi
 
 # Find merge commits reachable from HEAD but not from <remote>/<branch>
-merges=$(git rev-list --merges $remote/$branch..HEAD)
+merges=$(git rev-list --merges "${remote}/${branch}"..HEAD)
 if [ -z "$merges" ]; then
-  echo "No merge commits found in the current branch since $remote/$branch."
+  echo "No merge commits found in the current branch since ${remote}/${branch}."
   exit 0
 fi
 
@@ -66,8 +66,8 @@ for m in $merges; do
   # get all parents of the merge commit
   parents=$(git rev-list --parents -n 1 "$m" | cut -d' ' -f2-)
   for p in $parents; do
-    if git merge-base --is-ancestor "$remote/$branch" "$p"; then
-      echo "::error ::Found merge commit $m that merged $branch into the current branch (parent $p contains $remote/$branch)."
+    if git merge-base --is-ancestor "${remote}/${branch}" "$p"; then
+      echo "::error::Found merge commit $m that merged $branch into the current branch (parent $p contains ${remote}/${branch})."
       echo "=== Merge commit details ==="
       git --no-pager show --pretty=fuller --name-only "$m"
       echo "=== Nearby commits (graph) ==="
@@ -77,4 +77,4 @@ for m in $merges; do
   done
 done
 
-echo "No merges from $remote/$branch found in the current branch."
+echo "No merges from ${remote}/${branch} found in the current branch."
