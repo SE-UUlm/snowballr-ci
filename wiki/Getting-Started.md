@@ -121,7 +121,7 @@ ensure-linear-history:
     runs-on: ubuntu-latest
     steps:
         - name: Checkout code
-          uses: actions/checkout@v5
+          uses: actions/checkout@v6
           with:
               fetch-depth: 0
               ref: ${{ github.head_ref }}
@@ -151,7 +151,7 @@ lint-md:
     runs-on: ubuntu-latest
     steps:
         - name: Checkout code
-          uses: actions/checkout@v5
+          uses: actions/checkout@v6
 
         - name: Lint Markdown
           uses: SE-UUlm/snowballr-ci/src/lint-md@main
@@ -194,7 +194,7 @@ publish-wiki:
         contents: write # Required to push to the wiki repository
     steps:
         - name: Checkout code
-          uses: actions/checkout@v5
+          uses: actions/checkout@v6
 
         - name: Publish Wiki
           uses: SE-UUlm/snowballr-ci/src/wiki-publish@main
@@ -224,7 +224,7 @@ teamscale-upload:
     needs: coverage-report
     steps:
         - name: Checkout code
-            uses: actions/checkout@v5
+            uses: actions/checkout@v6
 
         - name: Download coverage report
             uses: actions/download-artifact@v6

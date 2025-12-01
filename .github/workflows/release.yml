@@ -34,7 +34,7 @@ jobs:
             contents: write
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
 
             - name: Download release artifact
               if: ${{ inputs.artifact-name != '' }}
@@ -70,7 +70,7 @@ jobs:
             contents: write
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v5
+              uses: actions/checkout@v6
 
             - name: Merge current branch -> target branch
               uses: devmasx/merge-branch@master
