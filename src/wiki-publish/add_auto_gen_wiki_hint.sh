@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 # Add auto-generated hint
 TIMESTAMP=$(date -u +"%Y-%m-%d, %H:%M:%S UTC")
 NOTICE="_This document was generated on $TIMESTAMP. Please do not edit this page directly._"
