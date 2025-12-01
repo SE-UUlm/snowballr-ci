@@ -23,8 +23,6 @@ on:
                 required: false
                 type: string
                 default: ""
-    push:
-        tags: ["v*.*.*"]
 
 jobs:
     create-release:
