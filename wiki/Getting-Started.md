@@ -82,7 +82,7 @@ jobs:
 ```
 
 This reusable workflow expects a `CHANGELOG.md` in the root of the repository, which is used to create the release. Also,
-the workflow has to be triggered on a tag push, because the tag is used to check, which version is released.
+the workflow has to be triggered on a tag push, because the tag is used to check which version is released.
 
 Arguments:
 

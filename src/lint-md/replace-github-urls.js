@@ -2,7 +2,7 @@
  * Script to replace GitHub URLs pointing to a source branch with a specified target branch name
  * in all wiki files and the README.md file.
  *
- * Usage: node src/lint-md/replace-github-urls.js <owner/repo> <source-branch> <target-branch>
+ * Usage: node src/lint-md/replace-github-urls.js <owner/repo> <source-branch> <target-branch> <readme-path> <wiki-dir>
  */
 
 import fs from "fs/promises";

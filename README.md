@@ -5,5 +5,5 @@ To learn more about the overall system, including its architecture, components, 
 literature reviews (SLRs) using snowballing, visit the [SnowballR repo](https://github.com/SE-UUlm/snowballr) and
 its [wiki](https://github.com/SE-UUlm/snowballr/wiki).
 
-Refer this repository's [wiki](https://github.com/SE-UUlm/snowballr-ci/wiki) to get started with using the provided
+Refer to this repository's [wiki](https://github.com/SE-UUlm/snowballr-ci/wiki) to get started with using the provided
 workflows and actions in your own projects and to understand how to contribute new ones.

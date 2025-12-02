@@ -41,7 +41,7 @@ runs:
               project: ${{ inputs.project }}
               user: ${{ inputs.user }}
               accesskey: ${{ inputs.access-key }}
-              partition: "Github Action > ${{ github.ref_name }} ${{ github.run_id }}"
+              partition: "GitHub Action > ${{ github.ref_name }} ${{ github.run_id }}"
               format: ${{ inputs.format }}
               message: "Code coverage from GitHub Actions"
               files: ${{ inputs.files }}

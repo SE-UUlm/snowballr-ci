@@ -64,7 +64,7 @@ api_url="https://api.github.com/repos/${repo}/pulls/${pr_number}/commits"
 # Build curl headers
 headers=(-H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json")
 if [ -n "${token:-}" ]; then
-  headers+=(-H "Authorization: token ${token}")
+  headers+=(-H "Authorization: Bearer ${token}")
 fi
 
 # Fetch commits (fail on HTTP errors)

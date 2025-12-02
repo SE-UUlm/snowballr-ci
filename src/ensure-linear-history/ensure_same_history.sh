@@ -59,7 +59,7 @@ fi
 if git merge-base --is-ancestor "${remote}/${branch}" HEAD; then
   echo "Current branch has the same history as ${remote}/${branch}"
 else
-  echo "::error::Current branch has not the same history as ${remote}/${branch}. Please rebase onto ${branch}."
+  echo "::error::Current branch does not have the same history as ${remote}/${branch}. Please rebase onto ${branch}."
   echo "=== Commit difference (${remote}/${branch}...HEAD) ==="
   git --no-pager log --oneline --decorate --graph --boundary --left-right "${remote}/${branch}...HEAD" || true
   exit 1

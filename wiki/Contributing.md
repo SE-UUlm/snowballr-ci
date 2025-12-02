@@ -79,7 +79,7 @@ To release a new version of the ci repo, follow these steps:
 5. After the pull request is merged, create a tag with the same version - so "vX.Y.Z" - at the merge commit.
 
    ```bash
-   git pull main
+   git pull origin/main
    git tag vX.Y.Z
    git push origin vX.Y.Z
    ```
