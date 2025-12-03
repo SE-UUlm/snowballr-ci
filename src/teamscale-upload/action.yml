@@ -29,7 +29,7 @@ runs:
         # We have to trigger this when triggered on "pull_request" because Teamscale requires a revision.
         # Therefore, we retrieve the last commit and set the revision manually.
         - name: Retrieve last commit of PR
-          if: ${{ github.event_name == 'pull_request' }}
+          if: github.event_name == 'pull_request'
           shell: bash
           run: bash ${{ github.action_path }}/retrieve_last_commit.sh -n ${{ github.event.pull_request.number }}
 

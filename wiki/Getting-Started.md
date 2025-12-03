@@ -120,7 +120,7 @@ ensure-linear-history:
     name: Ensure Linear Git History
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout code
+        - name: Checkout repository
           uses: actions/checkout@v6
           with:
               fetch-depth: 0
@@ -150,7 +150,7 @@ lint-md:
     name: Linting Markdown
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout code
+        - name: Checkout repository
           uses: actions/checkout@v6
 
         - name: Lint Markdown
@@ -187,13 +187,13 @@ Usage:
 ```yaml
 publish-wiki:
     name: Publish Wiki
-    if: ${{ github.ref_name == 'main' && github.ref_type == 'branch' }} # Only publish from main branch
+    if: github.ref_name == 'main' && github.ref_type == 'branch' # Only publish from main branch
     runs-on: ubuntu-latest
     needs: lint-md
     permissions:
         contents: write # Required to push to the wiki repository
     steps:
-        - name: Checkout code
+        - name: Checkout repository
           uses: actions/checkout@v6
 
         - name: Publish Wiki
@@ -223,22 +223,22 @@ teamscale-upload:
     runs-on: ubuntu-latest
     needs: coverage-report
     steps:
-        - name: Checkout code
-            uses: actions/checkout@v6
+        - name: Checkout repository
+          uses: actions/checkout@v6
 
         - name: Download coverage report
-            uses: actions/download-artifact@v6
-            with:
-                name: coverage-report
-                path: .
+          uses: actions/download-artifact@v6
+          with:
+              name: coverage-report
+              path: .
 
         - name: Teamscale Upload
-            uses: SE-UUlm/snowballr-ci/src/teamscale-upload@main
-            with:
-                project: <project-id>
-                access-key: ${{ secrets.TEAMSCALE_ACCESS_KEY }}
-                format: <format>
-                files: coverage-report.xml
+          uses: SE-UUlm/snowballr-ci/src/teamscale-upload@main
+          with:
+              project: <project-id>
+              access-key: ${{ secrets.TEAMSCALE_ACCESS_KEY }}
+              format: <format>
+              files: coverage-report.xml
 ```
 
 In the example above, we assume that there is a previous job named `coverage-report` that generates the coverage report

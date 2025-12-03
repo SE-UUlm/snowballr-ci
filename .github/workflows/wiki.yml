@@ -11,7 +11,7 @@ jobs:
         name: Lint Markdown
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout code
+            - name: Checkout repository
               uses: actions/checkout@v6
 
             - name: Lint Markdown
@@ -28,7 +28,7 @@ jobs:
         permissions:
             contents: write
         steps:
-            - name: Checkout code
+            - name: Checkout repository
               uses: actions/checkout@v6
 
             - name: Publish Wiki
