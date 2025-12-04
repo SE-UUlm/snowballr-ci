@@ -30,7 +30,7 @@ on:
 jobs:
     build-and-publish-docker-image:
         name: Build and Publish Docker Image
-        uses: SE-UUlm/snowballr-ci/.github/workflows/docker.yml@main
+        uses: SE-UUlm/snowballr-ci/.github/workflows/docker.yml@v1
         permissions:
             contents: read
             packages: write
@@ -64,7 +64,7 @@ on:
 jobs:
     release:
         name: Release Current Version
-        uses: SE-UUlm/snowballr-ci/.github/workflows/release.yml@main
+        uses: SE-UUlm/snowballr-ci/.github/workflows/release.yml@v1
         needs: build
         permissions:
             contents: write
@@ -127,7 +127,7 @@ ensure-linear-history:
               ref: ${{ github.head_ref }}
 
         - name: Run Check
-          uses: SE-UUlm/snowballr-ci/src/ensure-linear-history@main
+          uses: SE-UUlm/snowballr-ci/src/ensure-linear-history@v1
           with:
               target-branch: develop
 ```
@@ -154,7 +154,7 @@ lint-md:
           uses: actions/checkout@v6
 
         - name: Lint Markdown
-          uses: SE-UUlm/snowballr-ci/src/lint-md@main
+          uses: SE-UUlm/snowballr-ci/src/lint-md@v1
           with:
               source-branch: develop
               ignore-links: "https://dl.acm.org/doi/*"
@@ -197,7 +197,7 @@ publish-wiki:
           uses: actions/checkout@v6
 
         - name: Publish Wiki
-          uses: SE-UUlm/snowballr-ci/src/wiki-publish@main
+          uses: SE-UUlm/snowballr-ci/src/wiki-publish@v1
 ```
 
 This action expects a `wiki` directory in the root of the repository containing the markdown files to be published to
@@ -233,7 +233,7 @@ teamscale-upload:
               path: .
 
         - name: Teamscale Upload
-          uses: SE-UUlm/snowballr-ci/src/teamscale-upload@main
+          uses: SE-UUlm/snowballr-ci/src/teamscale-upload@v1
           with:
               project: <project-id>
               access-key: ${{ secrets.TEAMSCALE_ACCESS_KEY }}

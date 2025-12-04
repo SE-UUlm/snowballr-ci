@@ -52,5 +52,8 @@ executed.
 ## Release procedure
 
 We create a new release whenever a set of features, bug fixes, or changes is ready to be deployed.
-To release a new version of the ci repo, follow the steps in the
+To release a new version of the CI, follow the steps in the
 [SnowballR Wiki](https://github.com/SE-UUlm/snowballr/wiki/Contributing#release-procedure).
+
+Make sure that the examples in [Getting Started](https://github.com/SE-UUlm/snowballr-ci/wiki/Getting-Started) use the
+latest major version of this repository.
