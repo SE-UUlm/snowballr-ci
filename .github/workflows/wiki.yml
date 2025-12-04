@@ -1,0 +1,35 @@
+name: Lint and Publish Wiki
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    lint-md:
+        name: Lint Markdown
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+
+            - name: Lint Markdown
+              uses: ./src/lint-md
+              with:
+                  source-branch: main
+                  ignore-paths: "src"
+
+    publish-wiki:
+        name: Publish Wiki
+        if: github.ref_name == 'main' && github.ref_type == 'branch'
+        runs-on: ubuntu-latest
+        needs: lint-md
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+
+            - name: Publish Wiki
+              uses: ./src/wiki-publish

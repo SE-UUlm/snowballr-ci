@@ -1,0 +1,13 @@
+# This uses release.yml for this repo (hence the slightly different name)
+name: Release
+
+on:
+    push:
+        tags: ["v*.*.*"]
+
+jobs:
+    release:
+        name: Release Current Version
+        uses: ./.github/workflows/release.yml
+        permissions:
+            contents: write

@@ -1,0 +1,78 @@
+name: Release
+
+on:
+    workflow_call:
+        inputs:
+            artifact-name:
+                description: The name of the artifact that is used for the release.
+                required: false
+                type: string
+                default: ""
+            asset-path:
+                description: Path to the artifact's asset which is added to the release.
+                required: false
+                type: string
+                default: ""
+            zip-assets:
+                description: Whether the assets of the artifacts should be zipped before adding them to the release (useful for multiple files).
+                required: false
+                type: boolean
+                default: false
+            target-branch:
+                description: Branch that is updated after release was created.
+                required: false
+                type: string
+                default: ""
+
+jobs:
+    create-release:
+        name: Create new Release
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+
+            - name: Download release artifact
+              if: inputs.artifact-name != ''
+              uses: actions/download-artifact@v6
+              with:
+                  name: ${{ inputs.artifact-name }}
+                  path: assets/
+
+            - name: Zip assets
+              if: inputs.zip-assets && inputs.asset-path != ''
+              uses: montudor/action-zip@v1
+              with:
+                  args: zip -qq -r ${{ inputs.asset-path }} assets
+
+            # To have the asset at the same location as when not zipped, we move the zipped assets
+            - name: Move zipped assets into assets
+              if: inputs.zip-assets && inputs.asset-path != ''
+              run: mv ${{ inputs.asset-path }} assets/${{ inputs.asset-path }}
+
+            - name: Create Release
+              uses: docker://antonyurchenko/git-release:v6
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  args: ${{ inputs.asset-path != '' && format('assets/{0}', inputs.asset-path) || '' }}
+
+    update-branch:
+        name: Update target branch
+        if: inputs.target-branch != ''
+        runs-on: ubuntu-latest
+        needs: create-release
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+
+            - name: Merge current branch -> target branch
+              uses: devmasx/merge-branch@v1
+              with:
+                  type: now
+                  target_branch: ${{ inputs.target-branch }}
+                  github_token: ${{ secrets.GITHUB_TOKEN }}

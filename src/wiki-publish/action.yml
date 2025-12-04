@@ -1,0 +1,15 @@
+name: Publish Wiki
+description: Publishes the Wiki
+
+runs:
+    using: composite
+    steps:
+        - name: Add auto-generated hint to Wiki Markdown files
+          shell: bash
+          run: bash ${{ github.action_path }}/add_auto_gen_wiki_hint.sh
+
+        - name: Publish the Wiki
+          uses: Andrew-Chen-Wang/github-wiki-action@v5
+          with:
+              path: ${{ github.workspace }}/wiki/
+              strategy: "init"

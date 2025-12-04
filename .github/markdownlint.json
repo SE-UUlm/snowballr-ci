@@ -2,7 +2,9 @@
     "default": true,
     "line-length": {
         "line_length": 120,
-        "tables": false
+        "tables": false,
+        "code_blocks": false
     },
-    "first-line-heading": false
+    "first-line-heading": false,
+    "table-column-style": "aligned"
 }

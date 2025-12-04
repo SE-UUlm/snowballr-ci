@@ -1,0 +1,22 @@
+name: Git Conventions
+
+on:
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    ensure-linear-history:
+        name: Ensure Linear Git History
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+                  ref: ${{ github.head_ref }}
+
+            - name: Run Check
+              uses: ./src/ensure-linear-history
+              with:
+                  target-branch: main

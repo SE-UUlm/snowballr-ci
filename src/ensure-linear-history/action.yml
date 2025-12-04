@@ -1,0 +1,22 @@
+name: Ensure Linear Git History
+description: Ensures that the Git history is linear
+
+inputs:
+    target-branch:
+        description: The branch onto which the current branch should be rebased.
+        required: true
+
+runs:
+    using: composite
+    steps:
+        - name: Fetch target branch
+          shell: bash
+          run: git fetch --no-tags --prune origin ${{ inputs.target-branch }}
+
+        - name: Ensure current branch has same history as target branch
+          shell: bash
+          run: bash ${{ github.action_path }}/ensure_same_history.sh ${{ inputs.target-branch }}
+
+        - name: Ensure target branch is not merged into current branch
+          shell: bash
+          run: bash ${{ github.action_path }}/ensure_linear_history.sh ${{ inputs.target-branch }}
