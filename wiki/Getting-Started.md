@@ -44,9 +44,13 @@ This workflow expects a `Dockerfile` in the root of the repository.
 
 Arguments:
 
-| Argument         | Description                                                                           | Required | Default |
-| ---------------- | ------------------------------------------------------------------------------------- | :------: | :-----: |
-| `default-branch` | The default development branch on which the latest image is tagged with `latest-dev`. |   Yes    |    -    |
+| Argument         | Description                                                                           | Required |       Default       |
+| ---------------- | ------------------------------------------------------------------------------------- | :------: | :-----------------: |
+| `default-branch` | The default development branch on which the latest image is tagged with `latest-dev`. |   Yes    |          -          |
+| `registry`       | The container registry to which the image is pushed.                                  |    No    |       ghcr.io       |
+| `image-name`     | The name of the Docker image.                                                         |    No    | `github.repository` |
+| `docker-context` | The Docker build context.                                                             |    No    |          .          |
+| `docker-file`    | The path to the Dockerfile.                                                           |    No    |     Dockerfile      |
 
 ### Release
 
