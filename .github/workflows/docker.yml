@@ -1,9 +1,5 @@
 name: Build and Publish Docker Image
 
-env:
-    REGISTRY: ghcr.io
-    IMAGE_NAME: ${{ github.repository }}
-
 on:
     workflow_call:
         inputs:
@@ -11,6 +7,26 @@ on:
                 description: The default development branch on which the latest image is tagged with 'latest-dev'.
                 required: true
                 type: string
+            registry:
+                description: The registry to which the image should be pushed.
+                required: false
+                type: string
+                default: ghcr.io # GitHub Container Registry (GHCR) as default
+            image-name:
+                description: The name of the Docker Image.
+                required: false
+                type: string
+                default: ${{ github.repository }}
+            docker-context:
+                description: The context for building the Docker Image.
+                required: false
+                type: string
+                default: .
+            docker-file:
+                description: The Dockerfile to build.
+                required: false
+                type: string
+                default: Dockerfile
 
 jobs:
     build-and-publish-docker-image:
@@ -45,7 +61,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  images: ${{ inputs.registry }}/${{ inputs.image-name }}
                   tags: |
                       type=semver,pattern=v{{version}},enable=${{ github.ref_type == 'tag' }}
                       type=semver,pattern=v{{major}}.{{minor}},enable=${{ github.ref_type == 'tag' }}
@@ -55,11 +71,11 @@ jobs:
                   flavor: |
                       latest=false
 
-            - name: Login to GitHub Container Registry
+            - name: Login to Container Registry
               if: steps.check-push.outputs.should-push == 'true'
               uses: docker/login-action@v3
               with:
-                  registry: ${{ env.REGISTRY }}
+                  registry: ${{ inputs.registry }}
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -67,7 +83,8 @@ jobs:
               id: push
               uses: docker/build-push-action@v6
               with:
-                  context: .
+                  context: ${{ inputs.docker-context }}
+                  file: ${{ inputs.docker-file }}
                   push: ${{ steps.check-push.outputs.should-push == 'true' }}
                   # Only build for ARM when we intend to publish the image, as the emulation takes a lot of time
                   platforms: ${{ steps.check-push.outputs.should-push == 'true' && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
@@ -78,6 +95,6 @@ jobs:
               if: steps.check-push.outputs.should-push == 'true'
               uses: actions/attest-build-provenance@v3
               with:
-                  subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  subject-name: ${{ inputs.registry }}/${{ inputs.image-name }}
                   subject-digest: ${{ steps.push.outputs.digest }}
                   push-to-registry: true
