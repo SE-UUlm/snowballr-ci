@@ -16,7 +16,7 @@ on:
                 description: The name of the Docker Image.
                 required: false
                 type: string
-                default: ${{ github.repository }}
+                default: ""
             docker-context:
                 description: The context for building the Docker Image.
                 required: false
@@ -50,6 +50,11 @@ jobs:
               run: |
                   echo "should-push=${{ github.ref_type == 'tag' || (github.ref_type == 'branch' && github.ref_name == inputs.default-branch) }}" >> $GITHUB_OUTPUT
 
+            - name: Determine image name
+              id: image-name
+              run: |
+                  echo "image-name=${{ inputs.image-name == '' && github.repository || inputs.image-name }}" >> $GITHUB_OUTPUT
+
             # This step uses metadata-action to extract tags and labels that will be
             # applied to the specified image. The `id` "meta" allows the output of
             # this step to be referenced in a subsequent step. The `images` value
@@ -61,7 +66,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ inputs.registry }}/${{ inputs.image-name }}
+                  images: ${{ inputs.registry }}/${{ steps.image-name.outputs.image-name }}
                   tags: |
                       type=semver,pattern=v{{version}},enable=${{ github.ref_type == 'tag' }}
                       type=semver,pattern=v{{major}}.{{minor}},enable=${{ github.ref_type == 'tag' }}
@@ -95,6 +100,6 @@ jobs:
               if: steps.check-push.outputs.should-push == 'true'
               uses: actions/attest-build-provenance@v3
               with:
-                  subject-name: ${{ inputs.registry }}/${{ inputs.image-name }}
+                  subject-name: ${{ inputs.registry }}/${{ steps.image-name.outputs.image-name }}
                   subject-digest: ${{ steps.push.outputs.digest }}
                   push-to-registry: true
