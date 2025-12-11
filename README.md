@@ -1,3 +1,9 @@
+<div align="center">
+  <picture>
+    <img alt="SnowballR Logo" src="images/snowballr-logo-with-text.png" width="700"/>
+  </picture>
+</div>
+
 # SnowballR CI
 
 This is the CI repository for the SnowballR project where we maintain commonly used GitHub Actions workflows.
