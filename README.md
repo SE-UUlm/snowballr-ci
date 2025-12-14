@@ -1,7 +1,22 @@
 <div align="center">
-  <picture>
-    <img alt="SnowballR Logo" src="images/snowballr-logo-with-text.png" width="700"/>
-  </picture>
+    <picture>
+        <img alt="SnowballR Logo" src="images/snowballr-logo-with-text.png" width="700"/>
+    </picture>
+</div>
+
+<div align="center">
+    <a href="https://github.com/SE-UUlm/snowballr-ci/releases/latest">
+        <img alt="Version" src="https://img.shields.io/github/v/release/SE-UUlm/snowballr-ci?label=Version&color=light-green">
+    </a>
+    <a href="https://github.com/SE-UUlm/snowballr-ci/wiki">
+        <img alt="GitHub Wiki" src="https://img.shields.io/badge/Wiki-grey?logo=github">
+    </a>
+    <a href="https://deepwiki.com/SE-UUlm/snowballr-ci">
+        <img alt="Ask DeepWiki" src="https://deepwiki.com/badge.svg">
+    </a>
+    <a href="https://github.com/SE-UUlm/snowballr-ci/blob/main/LICENSE">
+        <img alt="License" src="https://img.shields.io/github/license/SE-UUlm/snowballr-ci?label=License">
+    </a>
 </div>
 
 # SnowballR CI
