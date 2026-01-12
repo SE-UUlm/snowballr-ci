@@ -11,3 +11,31 @@ jobs:
         uses: ./.github/workflows/release.yml
         permissions:
             contents: write
+
+    update-major-version-only-tag:
+        name: Update major-version-only tag
+        needs: release
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+              with:
+                  fetch-tags: true
+
+            - name: Update tag
+              run: |
+                  set -e
+
+                  tag="${{ github.ref_name }}"
+                  major_version="${tag%%.*}"
+                  echo "Creating tag ${major_version}"
+
+                  # Set Git user
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+
+                  # Create or update tag and push it to origin
+                  git tag "${major_version}" -m "" --force
+                  git push origin "${major_version}" --force
