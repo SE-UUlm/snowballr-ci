@@ -65,7 +65,7 @@ jobs:
 
             - name: Build and push Docker Image
               id: push
-              uses: docker/build-push-action@v6
+              uses: docker/build-push-action@v7
               with:
                   context: .
                   push: ${{ steps.check-push.outputs.should-push == 'true' }}
