@@ -161,7 +161,7 @@ lint-md:
               ignore-paths: "src"
 ```
 
-A `markdownlint.json` file in the `.github` directory to define the linting rules is required. For more
+A `markdownlint.json` file in the repository root to define the linting rules is required. For more
 information, refer to the [Markdownlint documentation](https://github.com/DavidAnson/markdownlint#optionsconfig).
 
 Arguments:

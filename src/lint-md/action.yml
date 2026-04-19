@@ -34,7 +34,7 @@ runs:
 
         - name: Lint Markdown files
           shell: bash
-          run: npx markdownlint --config .github/markdownlint.json --ignore CHANGELOG.md **/*.md
+          run: npx markdownlint --config markdownlint.json --ignore CHANGELOG.md **/*.md
 
         # We use hallmark for linting the CHANGELOG because its format doesn't adhere to normal Markdown style rules
         - name: Lint CHANGELOG.md
