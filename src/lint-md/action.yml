@@ -9,6 +9,10 @@ inputs:
     source-branch:
         description: The source branch in the URLs in the Markdown files.
         required: true
+    markdownlint-config-path:
+        description: Path to the markdownlint config file.
+        required: false
+        default: ".github/markdownlint.json"
     # For the following arguments refer to the documentation of MLC
     # https://github.com/marketplace/actions/markup-link-checker-mlc#ci-pipeline
     ignore-links:
@@ -34,7 +38,7 @@ runs:
 
         - name: Lint Markdown files
           shell: bash
-          run: npx markdownlint --config markdownlint.json --ignore CHANGELOG.md **/*.md
+          run: npx markdownlint --config "${{ inputs.markdownlint-config-path }}" --ignore CHANGELOG.md **/*.md
 
         # We use hallmark for linting the CHANGELOG because its format doesn't adhere to normal Markdown style rules
         - name: Lint CHANGELOG.md

@@ -157,21 +157,24 @@ lint-md:
           uses: SE-UUlm/snowballr-ci/src/lint-md@v1
           with:
               source-branch: develop
+              markdownlint-config-path: markdownlint.json
               ignore-links: "https://dl.acm.org/doi/*"
               ignore-paths: "src"
 ```
 
-A `markdownlint.json` file in the repository root to define the linting rules is required. For more
-information, refer to the [Markdownlint documentation](https://github.com/DavidAnson/markdownlint#optionsconfig).
+By default, `.github/markdownlint.json` is used. You can override the
+config file path via `markdownlint-config-path`. For more information, refer to the
+[Markdownlint documentation](https://github.com/DavidAnson/markdownlint#optionsconfig).
 
 Arguments:
 
-| Argument        | Description                                                                                           | Required |     Default      |
-| --------------- | ----------------------------------------------------------------------------------------------------- | :------: | :--------------: |
-| `node-version`  | The Node version that is used to execute scripts.                                                     |    No    |        24        |
-| `source-branch` | The source branch in the URLs of the wiki.                                                            |   Yes    |        -         |
-| `ignore-links`  | A comma-separated list of links which shall be ignored when checking for broken links.                |    No    | `<empty-string>` |
-| `ignore-paths`  | A comma-separated list of directories or files which shall be ignored when checking for broken links. |    No    | `<empty-string>` |
+| Argument                   | Description                                                                                           | Required |           Default           |
+| -------------------------- | ----------------------------------------------------------------------------------------------------- | :------: | :-------------------------: |
+| `node-version`             | The Node version that is used to execute scripts.                                                     |    No    |             24              |
+| `source-branch`            | The source branch in the URLs of the wiki.                                                            |   Yes    |              -              |
+| `markdownlint-config-path` | Path to the markdownlint config file.                                                                 |    No    | `.github/markdownlint.json` |
+| `ignore-links`             | A comma-separated list of links which shall be ignored when checking for broken links.                |    No    |      `<empty-string>`       |
+| `ignore-paths`             | A comma-separated list of directories or files which shall be ignored when checking for broken links. |    No    |      `<empty-string>`       |
 
 For `ignore-links` and `ignore-paths`, refer to the
 [Markup Link Checker (MLC) documentation](https://github.com/marketplace/actions/markup-link-checker-mlc#ci-pipeline).
