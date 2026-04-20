@@ -17,6 +17,7 @@ jobs:
             - name: Lint Markdown
               uses: ./src/lint-md
               with:
+                  markdownlint-config-path: markdownlint.json
                   source-branch: main
                   ignore-paths: "src"
 
