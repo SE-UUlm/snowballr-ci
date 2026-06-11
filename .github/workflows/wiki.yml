@@ -19,7 +19,7 @@ jobs:
               with:
                   markdownlint-config-path: markdownlint.json
                   source-branch: main
-                  ignore-paths: "src"
+                  ignore-paths: "src,AGENTS.md,CLAUDE.md"
 
     publish-wiki:
         name: Publish Wiki
