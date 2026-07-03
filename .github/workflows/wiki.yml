@@ -12,7 +12,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Lint Markdown
               uses: ./src/lint-md
@@ -30,7 +30,7 @@ jobs:
             contents: write
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v6
+              uses: actions/checkout@v7
 
             - name: Publish Wiki
               uses: ./src/wiki-publish
