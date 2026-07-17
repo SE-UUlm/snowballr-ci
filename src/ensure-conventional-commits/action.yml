@@ -15,8 +15,13 @@ runs:
     steps:
         - name: Fetch target branch
           shell: bash
-          run: git fetch --no-tags --prune origin ${{ inputs.target-branch }}
+          env:
+              TARGET_BRANCH: ${{ inputs.target-branch }}
+          run: git fetch --no-tags --prune origin "$TARGET_BRANCH"
 
         - name: Ensure commits follow Conventional Commits
           shell: bash
-          run: bash ${{ github.action_path }}/ensure_conventional_commits.sh -t "${{ inputs.types }}" ${{ inputs.target-branch }}
+          env:
+              TYPES: ${{ inputs.types }}
+              TARGET_BRANCH: ${{ inputs.target-branch }}
+          run: bash ${{ github.action_path }}/ensure_conventional_commits.sh -t "$TYPES" "$TARGET_BRANCH"

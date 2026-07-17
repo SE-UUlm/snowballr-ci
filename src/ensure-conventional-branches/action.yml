@@ -19,4 +19,8 @@ runs:
     steps:
         - name: Ensure branch name follows Conventional Branches
           shell: bash
-          run: bash ${{ github.action_path }}/ensure_conventional_branches.sh -t "${{ inputs.types }}" -i "${{ inputs.ignore-branches }}" "${{ inputs.branch-name }}"
+          env:
+              TYPES: ${{ inputs.types }}
+              IGNORE_BRANCHES: ${{ inputs.ignore-branches }}
+              BRANCH_NAME: ${{ inputs.branch-name }}
+          run: bash ${{ github.action_path }}/ensure_conventional_branches.sh -t "$TYPES" -i "$IGNORE_BRANCHES" "$BRANCH_NAME"
