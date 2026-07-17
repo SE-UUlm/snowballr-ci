@@ -42,8 +42,14 @@ and point to the canonical page.
 │   ├── docker.yml              # reusable: build + publish Docker image to ghcr.io
 │   ├── release.yml             # reusable: create GitHub release from CHANGELOG.md
 │   ├── release-ci.yml          # this-repo: cuts the release and updates the major-version tag
-│   ├── git_conventions.yml     # this-repo: linear history check on PRs
+│   ├── git_conventions.yml     # this-repo: linear history, commit, and branch-name checks on PRs
+│   ├── test.yml                # this-repo: runs the bats suite in tests/ on PRs
 │   └── wiki.yml                # this-repo: markdown lint + publish wiki/
+├── tests/                              # bats tests, mirroring src/'s directory structure
+│   ├── test_helper.bash                # shared setup helpers (self-remote git repos, etc.)
+│   ├── ensure-linear-history/          # ensure_linear_history.bats + ensure_same_history.bats
+│   ├── ensure-conventional-commits/    # ensure_conventional_commits.bats
+│   └── ensure-conventional-branches/   # ensure_conventional_branches.bats
 ├── wiki/                       # canonical documentation
 ├── images/                     # logo used in README
 ├── markdownlint.json
@@ -53,21 +59,22 @@ and point to the canonical page.
 
 ## Where to look
 
-| Task                                      | Location                                               | Notes                                                                                   |
-| ----------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| Project overview                          | README.md                                              | High-level pointers.                                                                    |
-| Usage docs for every workflow/action      | wiki/Getting-Started.md                                | Argument tables, YAML examples, defaults.                                               |
-| Contributing reusable workflows / actions | wiki/Contributing.md                                   | Composite action patterns, `${{ github.action_path }}`, release procedure.              |
-| Reusable: build & publish Docker image    | .github/workflows/docker.yml                           | Input: `default-branch` (tagged `latest-dev`). Used by api/frontend/etc.                |
-| Reusable: release with CHANGELOG.md       | .github/workflows/release.yml                          | Inputs: `artifact-name`, `asset-path`, `zip-assets`, `target-branch`.                   |
-| This-repo release                         | .github/workflows/release-ci.yml                       | Cuts releases for this repo; also updates the major-version-only tag (`v1`, ...).       |
-| Action: ensure linear git history         | src/ensure-linear-history/action.yml                   | Checks rebase onto a target branch; no merge commits in history.                        |
-| Action: ensure conventional commits       | src/ensure-conventional-commits/action.yml             | Checks every commit subject against the Conventional Commits spec.                      |
+| Task                                      | Location                                               | Notes                                                                                              |
+| ----------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| Project overview                          | README.md                                              | High-level pointers.                                                                               |
+| Usage docs for every workflow/action      | wiki/Getting-Started.md                                | Argument tables, YAML examples, defaults.                                                          |
+| Contributing reusable workflows / actions | wiki/Contributing.md                                   | Composite action patterns, `${{ github.action_path }}`, release procedure.                         |
+| Reusable: build & publish Docker image    | .github/workflows/docker.yml                           | Input: `default-branch` (tagged `latest-dev`). Used by api/frontend/etc.                           |
+| Reusable: release with CHANGELOG.md       | .github/workflows/release.yml                          | Inputs: `artifact-name`, `asset-path`, `zip-assets`, `target-branch`.                              |
+| This-repo release                         | .github/workflows/release-ci.yml                       | Cuts releases for this repo; also updates the major-version-only tag (`v1`, ...).                  |
+| Action: ensure linear git history         | src/ensure-linear-history/action.yml                   | Checks rebase onto a target branch; no merge commits in history.                                   |
+| Action: ensure conventional commits       | src/ensure-conventional-commits/action.yml             | Checks every commit subject against the Conventional Commits spec.                                 |
 | Action: ensure conventional branches      | src/ensure-conventional-branches/action.yml            | Checks branch name against `<type>/<issue-number>-<slug>`; default ignore for releases/dependabot. |
-| Action: markdown lint + link check        | src/lint-md/action.yml                                 | Wraps `markdownlint-cli` + `markup-link-checker`; ignore-paths/links inputs.            |
-| Action: publish wiki/ to GitHub Wiki      | src/wiki-publish/action.yml                            | Expects a `wiki/` dir in the repo; adds an auto-generated hint.                         |
-| Action: upload coverage to Teamscale      | src/teamscale-upload/action.yml                        | Defaults for SnowballR Teamscale; required: `project`, `access-key`, `format`, `files`. |
-| Release procedure (canonical)             | https://github.com/SE-UUlm/snowballr/wiki/Contributing | Single source of truth for SnowballR releases.                                          |
+| Action: markdown lint + link check        | src/lint-md/action.yml                                 | Wraps `markdownlint-cli` + `markup-link-checker`; ignore-paths/links inputs.                       |
+| Action: publish wiki/ to GitHub Wiki      | src/wiki-publish/action.yml                            | Expects a `wiki/` dir in the repo; adds an auto-generated hint.                                    |
+| Action: upload coverage to Teamscale      | src/teamscale-upload/action.yml                        | Defaults for SnowballR Teamscale; required: `project`, `access-key`, `format`, `files`.            |
+| Tests for the shell scripts               | tests/<action-name>/*.bats                             | bats, mirrors src/ layout; git-history tests use a self-remote (`git remote add origin .`).        |
+| Release procedure (canonical)             | https://github.com/SE-UUlm/snowballr/wiki/Contributing | Single source of truth for SnowballR releases.                                                     |
 
 ## Architecture and patterns
 
@@ -99,7 +106,10 @@ and point to the canonical page.
 There is no local build for this repo. Validation happens via:
 
 - The reusable workflows / composite actions themselves running in consumer repos.
-- This repo's own CI (`wiki.yml` for markdown, `git_conventions.yml` for linear history).
+- This repo's own CI (`wiki.yml` for markdown, `git_conventions.yml` for git conventions, `test.yml` for the
+  bats suite in `tests/`).
+- Locally: `bats --recursive tests/` (requires `bats-core`, e.g. `npm install -g bats`) runs the same suite as
+  `test.yml`.
 - Releases: tag `v*.*.*` on `main` to trigger `release-ci.yml`, which runs `release.yml` and updates the
   major-version tag.
 
@@ -115,7 +125,10 @@ There is no local build for this repo. Validation happens via:
 
 - **Style:** Follow `markdownlint.json` for all wiki / README / CHANGELOG content.
 - **Shell scripts:** Keep them POSIX-friendly where possible; place them next to the consuming `action.yml`.
-- **No automated unit tests** for the actions — correctness is validated by consumer repos' CI.
+- **Unit tests:** `src/*/*.sh` scripts that touch git history or plain string checks have `bats` tests under
+  `tests/<action-name>/` (mirroring `src/<action-name>/`, one `*.bats` file per script), with shared repo-setup
+  helpers in `tests/test_helper.bash`; run via `test.yml` on every PR. Scripts that mainly wrap third-party
+  actions (lint-md, wiki-publish, teamscale-upload) are still validated only by consumer repos' CI.
 
 ## Issues
 

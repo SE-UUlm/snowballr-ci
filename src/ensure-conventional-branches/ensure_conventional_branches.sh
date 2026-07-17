@@ -9,6 +9,7 @@ Checks that <branch-name> has the form <type>/<issue-number>-<slug>, where <type
 the allowed Conventional Commits types (https://www.conventionalcommits.org/en/v1.0.0/).
 Example: feat/1-add-login-page
 Defaults: types=build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test
+          ignore-patterns=releases/*,dependabot/*
 
 Options:
   -t types             Comma-separated list of allowed branch type prefixes
@@ -22,7 +23,7 @@ EOF
 
 # Default values
 types="build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test"
-ignore_patterns=""
+ignore_patterns="releases/*,dependabot/*"
 
 # Parse short options
 while getopts ":t:i:h" opt; do

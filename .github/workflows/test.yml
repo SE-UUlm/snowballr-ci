@@ -1,0 +1,23 @@
+name: Test
+
+on:
+    pull_request:
+
+jobs:
+    bats:
+        name: Run bats Tests
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: "24"
+
+            - name: Install bats
+              run: npm install -g bats@1.11.0
+
+            - name: Run tests
+              run: bats --recursive tests/
