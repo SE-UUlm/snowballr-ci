@@ -1,0 +1,22 @@
+name: Ensure Conventional Commits
+description: Ensures that all commits since a target branch follow the Conventional Commits specification
+
+inputs:
+    target-branch:
+        description: The branch that the current branch is based on; commits since this branch are checked.
+        required: true
+    types:
+        description: A comma-separated list of allowed Conventional Commits types.
+        required: false
+        default: "build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test"
+
+runs:
+    using: composite
+    steps:
+        - name: Fetch target branch
+          shell: bash
+          run: git fetch --no-tags --prune origin ${{ inputs.target-branch }}
+
+        - name: Ensure commits follow Conventional Commits
+          shell: bash
+          run: bash ${{ github.action_path }}/ensure_conventional_commits.sh -t "${{ inputs.types }}" ${{ inputs.target-branch }}

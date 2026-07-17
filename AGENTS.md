@@ -60,6 +60,7 @@ and point to the canonical page.
 | Reusable: release with CHANGELOG.md       | .github/workflows/release.yml                          | Inputs: `artifact-name`, `asset-path`, `zip-assets`, `target-branch`.                   |
 | This-repo release                         | .github/workflows/release-ci.yml                       | Cuts releases for this repo; also updates the major-version-only tag (`v1`, ...).       |
 | Action: ensure linear git history         | src/ensure-linear-history/action.yml                   | Checks rebase onto a target branch; no merge commits in history.                        |
+| Action: ensure conventional commits       | src/ensure-conventional-commits/action.yml             | Checks every commit subject against the Conventional Commits spec.                      |
 | Action: markdown lint + link check        | src/lint-md/action.yml                                 | Wraps `markdownlint-cli` + `markup-link-checker`; ignore-paths/links inputs.            |
 | Action: publish wiki/ to GitHub Wiki      | src/wiki-publish/action.yml                            | Expects a `wiki/` dir in the repo; adds an auto-generated hint.                         |
 | Action: upload coverage to Teamscale      | src/teamscale-upload/action.yml                        | Defaults for SnowballR Teamscale; required: `project`, `access-key`, `format`, `files`. |

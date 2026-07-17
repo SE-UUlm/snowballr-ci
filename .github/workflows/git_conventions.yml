@@ -20,3 +20,18 @@ jobs:
               uses: ./src/ensure-linear-history
               with:
                   target-branch: main
+
+    ensure-conventional-commits:
+        name: Ensure Conventional Commits
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+              with:
+                  fetch-depth: 0
+                  ref: ${{ github.head_ref }}
+
+            - name: Run Check
+              uses: ./src/ensure-conventional-commits
+              with:
+                  target-branch: main
