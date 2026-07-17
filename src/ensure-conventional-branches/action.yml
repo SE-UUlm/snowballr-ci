@@ -1,0 +1,26 @@
+name: Ensure Conventional Branches
+description: Ensures that a branch name follows the form <type>/<issue-number>-<slug>
+
+inputs:
+    branch-name:
+        description: The branch name to check.
+        required: true
+    types:
+        description: A comma-separated list of allowed Conventional Commits types.
+        required: false
+        default: "build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test"
+    ignore-branches:
+        description: A comma-separated list of glob patterns; branches matching any of them are skipped.
+        required: false
+        default: "releases/*,dependabot/*"
+
+runs:
+    using: composite
+    steps:
+        - name: Ensure branch name follows Conventional Branches
+          shell: bash
+          env:
+              TYPES: ${{ inputs.types }}
+              IGNORE_BRANCHES: ${{ inputs.ignore-branches }}
+              BRANCH_NAME: ${{ inputs.branch-name }}
+          run: bash ${{ github.action_path }}/ensure_conventional_branches.sh -t "$TYPES" -i "$IGNORE_BRANCHES" "$BRANCH_NAME"

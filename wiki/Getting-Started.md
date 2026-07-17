@@ -104,6 +104,10 @@ Otherwise, no merge is performed.
 The following actions are available in this repository:
 
 - [Ensure Linear Git History](#ensure-linear-git-history): Ensures that the git history of a branch is linear.
+- [Ensure Conventional Commits](#ensure-conventional-commits): Ensures that all commits since a target branch follow
+  the Conventional Commits specification.
+- [Ensure Conventional Branches](#ensure-conventional-branches): Ensures that a branch name follows the form
+  `<type>/<issue-number>-<slug>`.
 - [Markdown Lint](#markdown-lint): Lints Markdown files for style and formatting issues.
 - [Wiki Publish](#wiki-publish): Publishes the wiki directory to the GitHub Wiki.
 - [Teamscale Upload](#teamscale-upload): Uploads code coverage reports to Teamscale.
@@ -121,7 +125,7 @@ ensure-linear-history:
     runs-on: ubuntu-latest
     steps:
         - name: Checkout repository
-          uses: actions/checkout@v6
+          uses: actions/checkout@v7
           with:
               fetch-depth: 0
               ref: ${{ github.head_ref }}
@@ -138,6 +142,68 @@ Arguments:
 | --------------- | ----------------------------------------------------------- | :------: | :-----: |
 | `target-branch` | The branch onto which the current branch should be rebased. |   Yes    |    -    |
 
+### Ensure Conventional Commits
+
+This action checks that every commit reachable from the current branch but not from a target branch follows the
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification, i.e., each commit subject has
+the form `<type>[(scope)][!]: <description>`. Merge commits are excluded from the check.
+
+Usage:
+
+```yaml
+ensure-conventional-commits:
+    name: Ensure Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v7
+          with:
+              fetch-depth: 0
+              ref: ${{ github.head_ref }}
+
+        - name: Run Check
+          uses: SE-UUlm/snowballr-ci/src/ensure-conventional-commits@v1
+          with:
+              target-branch: develop
+```
+
+Arguments:
+
+| Argument        | Description                                                                            | Required |                            Default                             |
+| --------------- | -------------------------------------------------------------------------------------- | :------: | :------------------------------------------------------------: |
+| `target-branch` | The branch that the current branch is based on; commits since this branch are checked. |   Yes    |                               -                                |
+| `types`         | A comma-separated list of allowed Conventional Commits types.                          |    No    | `build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test` |
+
+### Ensure Conventional Branches
+
+This action checks that a branch name follows the form `<type>/<issue-number>-<slug>`, e.g. `feat/1-add-login-page`,
+where `<type>` is one of the allowed Conventional Commits types. Branches matching an `ignore-branches` glob pattern
+(e.g., release or Dependabot branches) are skipped.
+
+Usage:
+
+```yaml
+ensure-conventional-branches:
+    name: Ensure Conventional Branches
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v7
+
+        - name: Run Check
+          uses: SE-UUlm/snowballr-ci/src/ensure-conventional-branches@v1
+          with:
+              branch-name: ${{ github.head_ref }}
+```
+
+Arguments:
+
+| Argument          | Description                                                                         | Required |                            Default                             |
+| ----------------- | ----------------------------------------------------------------------------------- | :------: | :------------------------------------------------------------: |
+| `branch-name`     | The branch name to check.                                                           |   Yes    |                               -                                |
+| `types`           | A comma-separated list of allowed Conventional Commits types.                       |    No    | `build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test` |
+| `ignore-branches` | A comma-separated list of glob patterns; branches matching any of them are skipped. |    No    |                   `releases/*,dependabot/*`                    |
+
 ### Markdown Lint
 
 This action lints the Markdown files in the wiki and other files, e.g., the README.md and CHANGELOG.md for style and
@@ -151,7 +217,7 @@ lint-md:
     runs-on: ubuntu-latest
     steps:
         - name: Checkout repository
-          uses: actions/checkout@v6
+          uses: actions/checkout@v7
 
         - name: Lint Markdown
           uses: SE-UUlm/snowballr-ci/src/lint-md@v1
@@ -197,7 +263,7 @@ publish-wiki:
         contents: write # Required to push to the wiki repository
     steps:
         - name: Checkout repository
-          uses: actions/checkout@v6
+          uses: actions/checkout@v7
 
         - name: Publish Wiki
           uses: SE-UUlm/snowballr-ci/src/wiki-publish@v1
@@ -227,7 +293,7 @@ teamscale-upload:
     needs: coverage-report
     steps:
         - name: Checkout repository
-          uses: actions/checkout@v6
+          uses: actions/checkout@v7
 
         - name: Download coverage report
           uses: actions/download-artifact@v6

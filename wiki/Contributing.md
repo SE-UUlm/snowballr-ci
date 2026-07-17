@@ -49,6 +49,27 @@ runs:
 you to easily reference local files within the action. Otherwise, the script would not be found when the action is
 executed.
 
+### Testing local scripts
+
+If a composite action's local script operates on a git repository (checking history, branch names, commit
+messages, ...) or does other logic worth covering directly, add a [bats](https://bats-core.readthedocs.io/) test
+file for it under `tests/<action-name>/`, mirroring the action's directory name under `src/` (e.g. a script in
+`src/example-action/` gets a test file at `tests/example-action/example_script.bats`), run automatically on every
+PR by [`test.yml`](https://github.com/SE-UUlm/snowballr-ci/blob/main/.github/workflows/test.yml). Name each test
+using the "When \<condition\>, then \<expected result\>" pattern, e.g. `@test "When the branch has no issue
+number, then it fails"`. Scripts that need a real git history can add themselves as their own remote instead of
+relying on a real network remote or a throw-away GitHub repository:
+
+```bash
+git init -q
+git remote add origin .
+git fetch -q origin main
+```
+
+See `tests/test_helper.bash` for shared setup helpers (load it with `load '../test_helper'`), and the existing
+`tests/<action-name>/*.bats` files for examples. Run the suite locally with `bats --recursive tests/` (requires
+`bats-core`, e.g. `npm install -g bats`).
+
 ## Release procedure
 
 We create a new release whenever a set of features, bug fixes, or changes is ready to be deployed.
