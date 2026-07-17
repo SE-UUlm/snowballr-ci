@@ -31,11 +31,13 @@ and point to the canonical page.
 
 ```
 .
-├── src/                        # composite actions (one directory per action)
-│   ├── ensure-linear-history/  # action.yml + shell helpers (ensure_*.sh)
-│   ├── lint-md/                # action.yml + replace-github-urls.js
-│   ├── teamscale-upload/       # action.yml + retrieve_last_commit.sh
-│   └── wiki-publish/           # action.yml + add_auto_gen_wiki_hint.sh
+├── src/                                # composite actions (one directory per action)
+│   ├── ensure-linear-history/          # action.yml + shell helpers (ensure_*.sh)
+│   ├── ensure-conventional-commits/    # action.yml + ensure_conventional_commits.sh
+│   ├── ensure-conventional-branches/   # action.yml + ensure_conventional_branches.sh
+│   ├── lint-md/                        # action.yml + replace-github-urls.js
+│   ├── teamscale-upload/               # action.yml + retrieve_last_commit.sh
+│   └── wiki-publish/                   # action.yml + add_auto_gen_wiki_hint.sh
 ├── .github/workflows/          # reusable workflows + this repo's own CI
 │   ├── docker.yml              # reusable: build + publish Docker image to ghcr.io
 │   ├── release.yml             # reusable: create GitHub release from CHANGELOG.md
@@ -61,6 +63,7 @@ and point to the canonical page.
 | This-repo release                         | .github/workflows/release-ci.yml                       | Cuts releases for this repo; also updates the major-version-only tag (`v1`, ...).       |
 | Action: ensure linear git history         | src/ensure-linear-history/action.yml                   | Checks rebase onto a target branch; no merge commits in history.                        |
 | Action: ensure conventional commits       | src/ensure-conventional-commits/action.yml             | Checks every commit subject against the Conventional Commits spec.                      |
+| Action: ensure conventional branches      | src/ensure-conventional-branches/action.yml            | Checks branch name against `<type>/<issue-number>-<slug>`; default ignore for releases/dependabot. |
 | Action: markdown lint + link check        | src/lint-md/action.yml                                 | Wraps `markdownlint-cli` + `markup-link-checker`; ignore-paths/links inputs.            |
 | Action: publish wiki/ to GitHub Wiki      | src/wiki-publish/action.yml                            | Expects a `wiki/` dir in the repo; adds an auto-generated hint.                         |
 | Action: upload coverage to Teamscale      | src/teamscale-upload/action.yml                        | Defaults for SnowballR Teamscale; required: `project`, `access-key`, `format`, `files`. |
@@ -124,8 +127,10 @@ There is no local build for this repo. Validation happens via:
 
 ## Git and CI conventions
 
-- PRs to `main` must keep a linear git history (`git_conventions.yml`, using this repo's own
-  `src/ensure-linear-history` action — note that it dogfoods its own action).
+- PRs to `main` must keep a linear git history, follow Conventional Commits, and be named
+  `<type>/<issue-number>-<slug>` (`git_conventions.yml`, using this repo's own `src/ensure-linear-history`,
+  `src/ensure-conventional-commits`, and `src/ensure-conventional-branches` actions — note that it dogfoods its
+  own actions).
 - Releases tag `v*.*.*` on `main`; the major-version-only tag is updated automatically (`release-ci.yml`).
 
 ## Conventional commits

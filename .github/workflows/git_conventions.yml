@@ -35,3 +35,15 @@ jobs:
               uses: ./src/ensure-conventional-commits
               with:
                   target-branch: main
+
+    ensure-conventional-branches:
+        name: Ensure Conventional Branches
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v7
+
+            - name: Run Check
+              uses: ./src/ensure-conventional-branches
+              with:
+                  branch-name: ${{ github.head_ref }}

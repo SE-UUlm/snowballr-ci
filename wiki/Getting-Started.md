@@ -106,6 +106,8 @@ The following actions are available in this repository:
 - [Ensure Linear Git History](#ensure-linear-git-history): Ensures that the git history of a branch is linear.
 - [Ensure Conventional Commits](#ensure-conventional-commits): Ensures that all commits since a target branch follow
   the Conventional Commits specification.
+- [Ensure Conventional Branches](#ensure-conventional-branches): Ensures that a branch name follows the form
+  `<type>/<issue-number>-<slug>`.
 - [Markdown Lint](#markdown-lint): Lints Markdown files for style and formatting issues.
 - [Wiki Publish](#wiki-publish): Publishes the wiki directory to the GitHub Wiki.
 - [Teamscale Upload](#teamscale-upload): Uploads code coverage reports to Teamscale.
@@ -171,6 +173,36 @@ Arguments:
 | --------------- | -------------------------------------------------------------------------------------- | :------: | :------------------------------------------------------------: |
 | `target-branch` | The branch that the current branch is based on; commits since this branch are checked. |   Yes    |                               -                                |
 | `types`         | A comma-separated list of allowed Conventional Commits types.                          |    No    | `build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test` |
+
+### Ensure Conventional Branches
+
+This action checks that a branch name follows the form `<type>/<issue-number>-<slug>`, e.g. `feat/1-add-login-page`,
+where `<type>` is one of the allowed Conventional Commits types. Branches matching an `ignore-branches` glob pattern
+(e.g., release or Dependabot branches) are skipped.
+
+Usage:
+
+```yaml
+ensure-conventional-branches:
+    name: Ensure Conventional Branches
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v7
+
+        - name: Run Check
+          uses: SE-UUlm/snowballr-ci/src/ensure-conventional-branches@v1
+          with:
+              branch-name: ${{ github.head_ref }}
+```
+
+Arguments:
+
+| Argument          | Description                                                                         | Required |                            Default                             |
+| ----------------- | ----------------------------------------------------------------------------------- | :------: | :------------------------------------------------------------: |
+| `branch-name`     | The branch name to check.                                                           |   Yes    |                               -                                |
+| `types`           | A comma-separated list of allowed Conventional Commits types.                       |    No    | `build,chore,ci,docs,feat,fix,perf,refactor,revert,style,test` |
+| `ignore-branches` | A comma-separated list of glob patterns; branches matching any of them are skipped. |    No    |                   `releases/*,dependabot/*`                    |
 
 ### Markdown Lint
 
