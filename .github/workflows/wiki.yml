@@ -20,6 +20,7 @@ jobs:
                   markdownlint-config-path: markdownlint.json
                   source-branch: main
                   ignore-paths: "src,AGENTS.md,CLAUDE.md"
+                  warn-links: "https://deepwiki.com/*"
 
     publish-wiki:
         name: Publish Wiki
