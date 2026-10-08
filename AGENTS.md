@@ -35,7 +35,7 @@ and point to the canonical page.
 │   ├── ensure-linear-history/          # action.yml + shell helpers (ensure_*.sh)
 │   ├── ensure-conventional-commits/    # action.yml + ensure_conventional_commits.sh
 │   ├── ensure-conventional-branches/   # action.yml + ensure_conventional_branches.sh
-│   ├── lint-md/                        # action.yml + replace-github-urls.js
+│   ├── lint-md/                        # action.yml + replace-github-urls.js + check-warn-links.sh
 │   ├── teamscale-upload/               # action.yml + retrieve_last_commit.sh
 │   └── wiki-publish/                   # action.yml + add_auto_gen_wiki_hint.sh
 ├── .github/workflows/          # reusable workflows + this repo's own CI

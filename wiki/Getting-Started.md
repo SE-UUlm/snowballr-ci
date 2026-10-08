@@ -241,9 +241,12 @@ Arguments:
 | `markdownlint-config-path` | Path to the markdownlint config file.                                                                 |    No    | `.github/markdownlint.json` |
 | `ignore-links`             | A comma-separated list of links which shall be ignored when checking for broken links.                |    No    |      `<empty-string>`       |
 | `ignore-paths`             | A comma-separated list of directories or files which shall be ignored when checking for broken links. |    No    |      `<empty-string>`       |
+| `warn-links`               | A comma-separated list of links which only produce a warning instead of an error if not reachable.    |    No    |      `<empty-string>`       |
 
 For `ignore-links` and `ignore-paths`, refer to the
 [Markup Link Checker (MLC) documentation](https://github.com/marketplace/actions/markup-link-checker-mlc#ci-pipeline).
+Links matching `warn-links` are excluded from MLC and checked separately, emitting a GitHub warning if they are not
+reachable.
 
 ### Wiki Publish
 
